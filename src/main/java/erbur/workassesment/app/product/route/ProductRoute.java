@@ -7,12 +7,14 @@ import erbur.workassesment.app.product.service.ProductService;
 import erbur.workassesment.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -24,9 +26,20 @@ public class ProductRoute {
     private ProductService productService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<Object> list(){
+    public ResponseEntity<Object> list(@RequestParam int page, @RequestParam int size){
+
+        Page<Product> pagination = productService.listProducts(page, size);
+        HashMap<String, Object> dictJson = new HashMap<>();
+
+        dictJson.put("Total Pages", pagination.getTotalPages());
+        dictJson.put("Total Records", pagination.getTotalElements());
+        dictJson.put("Page Active", pagination.getPageable().getPageNumber());
+        dictJson.put("Size Record PerPage", pagination.getPageable().getPageSize());
+        dictJson.put("content", pagination.getContent());
+
+
         return  ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(
-                ProductApiResp.ProductApiRespBuilder(200, productService.listProducts()).getBodyJson()
+                ProductApiResp.ProductApiRespBuilder(200, dictJson).getBodyJson()
         );
     }
 
