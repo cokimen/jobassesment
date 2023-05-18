@@ -31,10 +31,10 @@ public class ProductRoute {
         Page<Product> pagination = productService.listProducts(page, size);
         HashMap<String, Object> dictJson = new HashMap<>();
 
-        dictJson.put("Total Pages", pagination.getTotalPages());
-        dictJson.put("Total Records", pagination.getTotalElements());
-        dictJson.put("Page Active", pagination.getPageable().getPageNumber());
-        dictJson.put("Size Record PerPage", pagination.getPageable().getPageSize());
+        dictJson.put("total_pages", pagination.getTotalPages());
+        dictJson.put("total_records", pagination.getTotalElements());
+        dictJson.put("page_active", pagination.getPageable().getPageNumber());
+        dictJson.put("rows_perpage", pagination.getPageable().getPageSize());
         dictJson.put("content", pagination.getContent());
 
 
